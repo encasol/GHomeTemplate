@@ -1,7 +1,6 @@
-import { SmartHomeV1SyncDevices, SmartHomeV1ExecuteResponseCommands } from 'actions-on-google';
+import { SmartHomeV1ExecuteResponseCommands, SmartHomeV1SyncDevices } from "actions-on-google";
 
 export interface IDevice {
-
     getDeviceId(): string;
     getOnSync(): SmartHomeV1SyncDevices;
     getOnQuery(): any;

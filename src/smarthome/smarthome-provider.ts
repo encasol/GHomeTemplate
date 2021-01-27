@@ -1,17 +1,17 @@
-import { smarthome, Headers, SmartHomeV1ExecuteResponse, SmartHomeV1ExecuteResponseCommands, SmartHomeV1SyncDevices } from 'actions-on-google';
-import { Express } from 'express';
-import { google, homegraph_v1 } from 'googleapis';
-import { ISmartHomeManager, SmartHomeManager } from './smarthome-manager';
+import { smarthome } from "actions-on-google";
+import { Express } from "express";
+import { google, homegraph_v1 } from "googleapis";
+import { ISmartHomeManager, SmartHomeManager } from "./smarthome-manager";
 
 export interface ISmartHomeProvider {
     init(): void;
 }
 
 const options: homegraph_v1.Options = {
-    version: 'v1'
+    version: "v1"
 };
 const homegraph = google.homegraph(options);
-const USER_ID = '123';
+const USER_ID = "123";
 
 export class SmartHomeProvider implements ISmartHomeProvider {
     private homeApp: ISmartHomeManager;
@@ -20,24 +20,24 @@ export class SmartHomeProvider implements ISmartHomeProvider {
         this.homeApp = new SmartHomeManager(USER_ID);
     }
 
-    init(): void {
+    public init(): void {
         const smartHome = smarthome();
         smartHome.onSync(this.homeApp.onSyncResponder);
-        smartHome.onQuery(async (body) => { return this.homeApp.onQueryResponder(body); });
-        smartHome.onExecute(async (body) => { return this.homeApp.onExecuteResponderasync(body); });
+        smartHome.onQuery(async (body) => this.homeApp.onQueryResponder(body));
+        smartHome.onExecute(async (body) => this.homeApp.onExecuteResponderasync(body));
 
         smartHome.onDisconnect((body, headers) => {
-            console.log('User account unlinked from Google Assistant');
+            console.log("User account unlinked from Google Assistant");
             // Return empty response
             return {};
         });
 
-        this.app.get('/smarthome', smartHome);
-        this.app.post('/smarthome', smartHome);
-        
-        this.app.get('/requestsync', async (request, response) => {
-            console.log('RequestSync');
-            response.set('Access-Control-Allow-Origin', '*');
+        this.app.get("/smarthome", smartHome);
+        this.app.post("/smarthome", smartHome);
+
+        this.app.get("/requestsync", async (request, response) => {
+            console.log("RequestSync");
+            response.set("Access-Control-Allow-Origin", "*");
             console.info(`Request SYNC for user ${USER_ID}`);
             try {
                 const res = await homegraph.devices.requestSync({
@@ -45,7 +45,7 @@ export class SmartHomeProvider implements ISmartHomeProvider {
                         agentUserId: USER_ID,
                     },
                 });
-                console.info('Request sync response:', res.status, res.data);
+                console.info("Request sync response:", res.status, res.data);
                 response.json(res.data);
             } catch (err) {
                 console.error(err);
@@ -53,8 +53,8 @@ export class SmartHomeProvider implements ISmartHomeProvider {
             }
         });
 
-        this.app.get('/reportstate', (request, response) => {
-            console.log('report state')
+        this.app.get("/reportstate", (request, response) => {
+            console.log("report state");
         });
     }
 }
