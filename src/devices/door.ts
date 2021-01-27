@@ -29,17 +29,15 @@ export class Door implements IDevice {
         };
     }
     
-    getOnQuery(): Promise<any> {
-        const promise = new Promise((resolve) => {
-            resolve({
-                status: "SUCCESS",
-                online: true,
-                openPercent: 0,
-                isLocked: true,
-                isJammed: false
-            });
-        });
-        return promise;
+    getOnQuery(): any {
+        
+        return {
+            status: "SUCCESS",
+            online: true,
+            openPercent: 0,
+            isLocked: true,
+            isJammed: false
+        };
     }
     
 
@@ -66,21 +64,18 @@ export class Door implements IDevice {
     
         return state;
     };
-    execute(executions): Promise<SmartHomeV1ExecuteResponseCommands> {
-        
-        const promise = new Promise<SmartHomeV1ExecuteResponseCommands>((resolve) => {
-            for (const execution of executions) {
-                this.updateDevice(execution);
-            }
 
-            resolve({
-                ids: [],
-                status: 'SUCCESS',
-                states: {
-                    openPercent: 100,
-                },
-            });
-        });
-        return promise;
+    execute(executions): SmartHomeV1ExecuteResponseCommands {
+        for (const execution of executions) {
+            this.updateDevice(execution);
+        }
+
+        return {
+            ids: [],
+            status: 'SUCCESS',
+            states: {
+                openPercent: 100,
+            },
+        };
     }
 }
