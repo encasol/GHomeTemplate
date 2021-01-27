@@ -10,9 +10,6 @@ import { IDevice } from './devices/device-interface';
 import { Door } from './devices/door';
 import fs from 'fs';
 
-const privateKey  = fs.readFileSync('/home/pi/sslCert/host.key', 'utf8');
-const certificate = fs.readFileSync('/home/pi/sslCert/host.cert', 'utf8');
-const credentials = {key: privateKey, cert: certificate};
 const app = express();
 const port = 3000;
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -132,14 +129,12 @@ smartHome.onQuery(async (body) => {
     };
     const queryPromises = [];
     const intent = body.inputs[0];
-    console.log(intent)
+    
     for (const device of intent.payload.devices) {
         const deviceId = device.id;
-        console.log('query: ' + deviceId)
         // Add response to device payload
-        queryPromises.push(devices[deviceId].getOnQuery().then((data) => {
+        queryPromises.push(devices.get(deviceId).getOnQuery().then((data) => {
             payload.devices[deviceId] = data;
-            console.log(payload);
         }));
     }
     // Wait for all promises to resolve
@@ -150,35 +145,8 @@ smartHome.onQuery(async (body) => {
     };
 });
 
-const updateDevice = async (execution, deviceId) => {
-    const {params, command} = execution;
-    let state; let ref;
-    console.log(params);
-    console.log(command);
-    switch (command) {
-      case 'action.devices.commands.OpenClose':
-        state = {on: true};
-        console.log('OpenClose');
 
-        http.get('http://localhost:4321/open', (resp) => {
-        }).on("error", (err) => {
-            console.log("Error: " + err.message);
-        });
-        break;
-      case 'action.devices.commands.StartStop':
-        state = {isRunning: true};
-        console.log('StartStop');
-        break;
-      case 'action.devices.commands.PauseUnpause':
-        state = {isPaused: false};
-        console.log('StartStop');
-        break;
-    }
-  
-    return state;
-};
-
-smartHome.onExecute(async (body, headers: Headers): Promise<SmartHomeV1ExecuteResponse> => {
+smartHome.onExecute(async (body): Promise<SmartHomeV1ExecuteResponse> => {
     console.log('onExecute');
     const {requestId} = body;
     // Execution results are grouped by status
@@ -194,15 +162,12 @@ smartHome.onExecute(async (body, headers: Headers): Promise<SmartHomeV1ExecuteRe
     const intent = body.inputs[0];
     for (const command of intent.payload.commands) {
         for (const device of command.devices) {
-            for (const execution of command.execution) {
-                executePromises.push(
-                    updateDevice(execution, device.id)
-                        .then((data) => {
-                            result.ids.push(device.id);
-                            Object.assign(result.states, data);
-                        })
-                        .catch(() => console.error('EXECUTE', device.id)));
-            }
+            executePromises.push(
+                devices.get(device.id).execute(command.execution).then((data) => {
+                    result.ids.push(device.id);
+                    Object.assign(result.states, data.states);
+                }).catch(() => console.error('EXECUTE', device.id))
+            );
         }
     }
   
@@ -247,8 +212,6 @@ app.get('/reportstate', (request, response) => {
     console.log('report state')
 });
 
-var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
-
+console.log('Started');
+let httpServer = http.createServer(app);
 httpServer.listen(port);
-httpsServer.listen(port + 1);

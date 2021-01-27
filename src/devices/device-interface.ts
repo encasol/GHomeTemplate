@@ -5,6 +5,5 @@ export interface IDevice {
     getDeviceId(): string;
     getOnSync(): SmartHomeV1SyncDevices;
     getOnQuery(): Promise<any>;
-    execute(): SmartHomeV1ExecuteResponseCommands;
-
+    execute(execution): Promise<SmartHomeV1ExecuteResponseCommands>;
 }

@@ -42,7 +42,45 @@ export class Door implements IDevice {
         return promise;
     }
     
-    execute(): SmartHomeV1ExecuteResponseCommands {
-        return null;
+
+    
+    updateDevice(execution) {
+        const {params, command} = execution;
+        let state;
+        console.log(params);
+        console.log(command);
+        switch (command) {
+            case 'action.devices.commands.OpenClose':
+                state = {on: true};
+                console.log('OpenClose');
+                break;
+            case 'action.devices.commands.StartStop':
+                state = {isRunning: true};
+                console.log('StartStop');
+                break;
+            case 'action.devices.commands.PauseUnpause':
+                state = {isPaused: false};
+                console.log('StartStop');
+                break;
+        }
+    
+        return state;
+    };
+    execute(executions): Promise<SmartHomeV1ExecuteResponseCommands> {
+        
+        const promise = new Promise<SmartHomeV1ExecuteResponseCommands>((resolve) => {
+            for (const execution of executions) {
+                this.updateDevice(execution);
+            }
+
+            resolve({
+                ids: [],
+                status: 'SUCCESS',
+                states: {
+                    openPercent: 100,
+                },
+            });
+        });
+        return promise;
     }
 }
