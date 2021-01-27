@@ -1,8 +1,5 @@
 import { Express } from 'express';
-import { google, homegraph_v1 } from 'googleapis';
 import util from 'util';
-import { smarthome, Headers, SmartHomeV1ExecuteResponse, SmartHomeV1ExecuteResponseCommands, SmartHomeV1SyncDevices } from 'actions-on-google';
-import { OAuth2Client } from 'google-auth-library';
 
 export interface IAuthProvider {
     init(): void;
