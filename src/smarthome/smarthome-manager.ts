@@ -9,9 +9,8 @@ import {
     SmartHomeV1SyncRequest,
     SmartHomeV1SyncResponse,
 } from "actions-on-google";
-import { google, homegraph_v1 } from "googleapis";
 import { IDevice } from "../devices/device-interface";
-import { Door } from "../devices/door";
+import { DeviceProvider, IDeviceProvider } from "../devices/device-provider";
 
 export interface ISmartHomeManager {
     onSyncResponder(body: SmartHomeV1SyncRequest): SmartHomeV1SyncResponse;
@@ -23,14 +22,11 @@ export class SmartHomeManager implements ISmartHomeManager {
     public devices: Map<string, IDevice>;
 
     constructor(private USER_ID) {
-        const door: Door = new Door();
-        this.devices = new Map([
-            [door.getDeviceId(), door],
-        ]);
+        const devProvider: IDeviceProvider = new DeviceProvider();
+        this.devices = devProvider.getDevices();
     }
 
     public onSyncResponder(body: SmartHomeV1SyncRequest): SmartHomeV1SyncResponse {
-        console.log("OnSync");
         const devicesPayload: SmartHomeV1SyncDevices[] = Array.from(
             this.devices).map(([key, device]) => device.getOnSync());
 
@@ -44,7 +40,6 @@ export class SmartHomeManager implements ISmartHomeManager {
     }
 
     public onQueryResponder(body: SmartHomeV1QueryRequest): SmartHomeV1QueryResponse {
-        console.log("onQuery");
         const {requestId} = body;
         const payload = {
             devices: {},
@@ -66,7 +61,6 @@ export class SmartHomeManager implements ISmartHomeManager {
     }
 
     public onExecuteResponderasync(body: SmartHomeV1ExecuteRequest): SmartHomeV1ExecuteResponse {
-        console.log("onExecute " + this);
         const {requestId} = body;
         // Execution results are grouped by status
         const result: SmartHomeV1ExecuteResponseCommands = {

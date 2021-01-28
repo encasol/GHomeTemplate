@@ -8,7 +8,7 @@ export interface ISmartHomeProvider {
 }
 
 const options: homegraph_v1.Options = {
-    version: "v1"
+    version: "v1",
 };
 const homegraph = google.homegraph(options);
 const USER_ID = "123";

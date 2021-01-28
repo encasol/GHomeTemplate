@@ -9,22 +9,22 @@ export class Door implements IDevice {
 
     public getOnSync(): SmartHomeV1SyncDevices {
         return {
+            deviceInfo: {
+                hwVersion: "1.0",
+                manufacturer: "Enric Co",
+                model: "enric-door",
+                swVersion: "1.0.1",
+            },
             id: this.getDeviceId(),
-            type: "action.devices.types.VALVE",
-            traits: [
-                "action.devices.traits.OpenClose",
-            ],
             name: {
                 defaultNames: ["My Door"],
                 name: "Door",
                 nicknames: ["Door"],
             },
-            deviceInfo: {
-                manufacturer: "Enric Co",
-                model: "enric-door",
-                hwVersion: "1.0",
-                swVersion: "1.0.1",
-            },
+            traits: [
+                "action.devices.traits.OpenClose",
+            ],
+            type: "action.devices.types.VALVE",
             willReportState: true,
         };
     }
@@ -32,11 +32,11 @@ export class Door implements IDevice {
     public getOnQuery(): any {
 
         return {
-            status: "SUCCESS",
+            isJammed: false,
+            isLocked: true,
             online: true,
             openPercent: 0,
-            isLocked: true,
-            isJammed: false,
+            status: "SUCCESS",
         };
     }
 
