@@ -27,13 +27,27 @@ Start the server
 ```bash
 npm start
 ```
-
-Use [ngrok](https://ngrok.com/) to export the local port. Just for testing purposes.
+### Test on your local enviroment
+Use [ngrok](https://ngrok.com/) to export the local port.
 ```bash
 ./ngrok authtoken <your-token>
 ./ngrok http 3000 #Or your choosed port
 ```
 
+#### Configure Actions console project
+- Under Overview > Build your Action, select Add Action(s). Enter the URL for your cloud function that provides fulfillment for the smart home intents and click Save.
+```bash
+https://<ngrok-url>/smarthome
+```
+- On the Develop > Invocation tab, add a Display Name for your Action, and click Save. This name will appear in the Google Home app.
+- To enable Account linking, select the Develop > Account linking option in the left navigation. Use these account linking settings:
+```bash
+Client ID: ABC123
+Client secret: DEF456
+Authorization URL: https://<ngrok-url>/fakeauth
+Token URL: https://<ngrok-url>/faketoken
+```
+- Click Save to save your account linking configuration, then click Test to enable testing on your project.
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
