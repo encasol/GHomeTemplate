@@ -1,6 +1,8 @@
 import { SmartHomeV1ExecuteResponseCommands, SmartHomeV1SyncDevices } from "actions-on-google";
+import { injectable } from "inversify";
 import { IDevice } from "./device-interface";
 
+@injectable()
 export class Door implements IDevice {
 
     public getDeviceId(): string {

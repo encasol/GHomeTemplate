@@ -1,20 +1,16 @@
 import bodyParser from "body-parser";
 import express from "express";
 import http from "http";
-import { AuthProvider, IAuthProvider } from "./auth/auth-provider";
-import { ISmartHomeProvider, SmartHomeProvider } from "./smarthome/smarthome-provider";
+import "reflect-metadata";
+import { IAuthProvider } from "./auth/auth-provider";
+import { IServerProxy } from "./server/server-proxy";
+import { ISmartHomeProxy } from "./smarthome/smarthome-proxy";
+import { container } from "./utils/inversify.config";
+import { Symbols } from "./utils/symbols";
 
-const app = express();
-const port = 3000;
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
-
-const authProv: IAuthProvider = new AuthProvider(app);
+const authProv: IAuthProvider = container.get<IAuthProvider>(Symbols.AuthProvider);
 authProv.init();
-
-const smartHome: ISmartHomeProvider = new SmartHomeProvider(app);
+const smartHome: ISmartHomeProxy = container.get<ISmartHomeProxy>(Symbols.SmartHomeProxy);
 smartHome.init();
-
-console.log("Started");
-const httpServer = http.createServer(app);
-httpServer.listen(port);
+const serverProxy: IServerProxy = container.get<IServerProxy>(Symbols.ServerProxy);
+serverProxy.listen();

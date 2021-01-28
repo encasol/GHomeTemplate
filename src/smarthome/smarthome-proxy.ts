@@ -1,23 +1,19 @@
 import { smarthome } from "actions-on-google";
-import { Express } from "express";
-import { google, homegraph_v1 } from "googleapis";
-import { ISmartHomeManager, SmartHomeManager } from "./smarthome-manager";
+import { inject, injectable } from "inversify";
+import { IServerProxy } from "../server/server-proxy";
+import { container } from "../utils/inversify.config";
+import { homegraph, Symbols, USER_ID } from "../utils/symbols";
+import { ISmartHomeManager } from "./smarthome-manager";
 
-export interface ISmartHomeProvider {
+export interface ISmartHomeProxy {
     init(): void;
 }
 
-const options: homegraph_v1.Options = {
-    version: "v1",
-};
-const homegraph = google.homegraph(options);
-const USER_ID = "123";
+@injectable()
+export class SmartHomeProxy implements ISmartHomeProxy {
+    private homeApp: ISmartHomeManager = container.get<ISmartHomeManager>(Symbols.SmartHomeManager);
 
-export class SmartHomeProvider implements ISmartHomeProvider {
-    private homeApp: ISmartHomeManager;
-
-    constructor(private app: Express) {
-        this.homeApp = new SmartHomeManager(USER_ID);
+    constructor(@inject(Symbols.ServerProxy) private app: IServerProxy) {
     }
 
     public init(): void {

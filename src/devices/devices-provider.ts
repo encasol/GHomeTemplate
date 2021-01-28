@@ -1,15 +1,18 @@
+import { injectable } from "inversify";
+import { container } from "../utils/inversify.config";
+import { Symbols } from "../utils/symbols";
 import { IDevice } from "./device-interface";
-import { Door } from "./door";
 
-export interface IDeviceProvider {
+export interface IDevicesProvider {
     getDevices(): Map<string, IDevice>;
 }
 
-export class DeviceProvider implements IDeviceProvider {
+@injectable()
+export class DevicesProvider implements IDevicesProvider {
     private devices: Map<string, IDevice>;
 
     constructor() {
-        const door: Door = new Door();
+        const door: IDevice = container.get<IDevice>(Symbols.Door);
 
         this.devices = new Map([
             [door.getDeviceId(), door],

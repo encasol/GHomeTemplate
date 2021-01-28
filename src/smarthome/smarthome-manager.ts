@@ -9,8 +9,11 @@ import {
     SmartHomeV1SyncRequest,
     SmartHomeV1SyncResponse,
 } from "actions-on-google";
+import { inject, injectable } from "inversify";
 import { IDevice } from "../devices/device-interface";
-import { DeviceProvider, IDeviceProvider } from "../devices/device-provider";
+import { IDevicesProvider } from "../devices/devices-provider";
+import { container } from "../utils/inversify.config";
+import { Symbols, USER_ID } from "../utils/symbols";
 
 export interface ISmartHomeManager {
     onSyncResponder(body: SmartHomeV1SyncRequest): SmartHomeV1SyncResponse;
@@ -18,12 +21,12 @@ export interface ISmartHomeManager {
     onExecuteResponderasync(body: SmartHomeV1ExecuteRequest): SmartHomeV1ExecuteResponse;
 }
 
+@injectable()
 export class SmartHomeManager implements ISmartHomeManager {
-    public devices: Map<string, IDevice>;
+    private devices: Map<string, IDevice>;
 
-    constructor(private USER_ID) {
-        const devProvider: IDeviceProvider = new DeviceProvider();
-        this.devices = devProvider.getDevices();
+    constructor(@inject(Symbols.DevicesProvider) private devProvider: IDevicesProvider) {
+        this.devices = this.devProvider.getDevices();
     }
 
     public onSyncResponder(body: SmartHomeV1SyncRequest): SmartHomeV1SyncResponse {
@@ -32,7 +35,7 @@ export class SmartHomeManager implements ISmartHomeManager {
 
         return {
             payload: {
-                agentUserId: this.USER_ID,
+                agentUserId: USER_ID,
                 devices: devicesPayload,
             },
             requestId: body.requestId,
