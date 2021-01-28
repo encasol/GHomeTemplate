@@ -24,7 +24,7 @@ export class Door implements IDevice {
             traits: [
                 "action.devices.traits.OpenClose",
             ],
-            type: "action.devices.types.VALVE",
+            type: "action.devices.types.DOOR",
             willReportState: true,
         };
     }
