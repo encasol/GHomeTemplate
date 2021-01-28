@@ -49,6 +49,16 @@ Token URL: https://<ngrok-url>/faketoken
 ```
 - Click Save to save your account linking configuration, then click Test to enable testing on your project.
 
+
+#### Link to Google Assistant
+In order to test your smart home Action, you need to link your project with a Google account. This enables testing through Google Assistant surfaces and the Google Home app that are signed in to the same account.
+- On your phone, open the Google Assistant settings. Note that you should be logged in as the same account as in the console.
+- Navigate to Google Assistant > Settings > Home Control (under Assistant).
+- Select the plus (+) icon in the bottom right corner
+- You should see your test app with the [test] prefix and the display name you set.
+- Select that item. The Google Assistant will then authenticate with your service and send a SYNC request, asking your service to provide a list of devices for the user.
+- Open the Google Home app and verify that you can see your washer device.
+
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
