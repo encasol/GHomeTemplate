@@ -40,9 +40,9 @@ export class Door implements IDevice {
         };
     }
 
-    public updateDevice(execution) {
+    public updateDevice(execution): any {
         const {params, command} = execution;
-        let state;
+        let state: any;
         console.log(params);
         console.log(command);
         switch (command) {

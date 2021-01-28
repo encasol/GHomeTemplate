@@ -22,13 +22,12 @@ export class SmartHomeProvider implements ISmartHomeProvider {
 
     public init(): void {
         const smartHome = smarthome();
-        smartHome.onSync(this.homeApp.onSyncResponder);
+        smartHome.onSync((body) => this.homeApp.onSyncResponder(body));
         smartHome.onQuery(async (body) => this.homeApp.onQueryResponder(body));
         smartHome.onExecute(async (body) => this.homeApp.onExecuteResponderasync(body));
 
         smartHome.onDisconnect((body, headers) => {
             console.log("User account unlinked from Google Assistant");
-            // Return empty response
             return {};
         });
 
