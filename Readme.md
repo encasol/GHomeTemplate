@@ -1,11 +1,11 @@
 # GHomeTemplate
 
-GHomeTemplate is meant to be the starting point for creating a NodeJS Server to manage Google Home Smart devices.
+GNome Template is meant to be the starting point for creating a NodeJS Server to manage Google Home Smart devices. You just need to add a device implementing the IDevice interface.  Then add it to the dependency injector (src/utils/inversify.config.ts) and to the Device Provider  (src/devices/device-provider.ts).
 
 ## Installation
 
 ### Install dependencies
-Use the package manager [npm](https://www.npmjs.com/package/npm) to install GHomeTemplate.
+Use the package manager [npm](https://www.npmjs.com/package/npm) to install dependencies.
 
 ```bash
 npm install
