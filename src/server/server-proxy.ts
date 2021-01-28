@@ -14,6 +14,7 @@ export interface IServerProxy {
 export class ServerProxy implements IServerProxy {
     private app: Express;
     private port: number = 3000;
+
     constructor() {
         this.app = express();
         this.app.use(bodyParser.urlencoded({ extended: false }));

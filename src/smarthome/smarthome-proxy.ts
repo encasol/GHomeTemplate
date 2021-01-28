@@ -11,10 +11,9 @@ export interface ISmartHomeProxy {
 
 @injectable()
 export class SmartHomeProxy implements ISmartHomeProxy {
-    private homeApp: ISmartHomeManager = container.get<ISmartHomeManager>(Symbols.SmartHomeManager);
 
-    constructor(@inject(Symbols.ServerProxy) private app: IServerProxy) {
-    }
+    constructor(@inject(Symbols.ServerProxy) private app: IServerProxy,
+                @inject(Symbols.SmartHomeManager) private homeApp: ISmartHomeManager) {}
 
     public init(): void {
         const smartHome = smarthome();

@@ -1,4 +1,3 @@
-import { Express } from "express";
 import { inject, injectable } from "inversify";
 import util from "util";
 import { IServerProxy } from "../server/server-proxy";
@@ -11,8 +10,7 @@ export interface IAuthProvider {
 @injectable()
 export class AuthProvider implements AuthProvider {
 
-    constructor(@inject(Symbols.ServerProxy) private app: IServerProxy) {
-    }
+    constructor(@inject(Symbols.ServerProxy) private app: IServerProxy) {}
 
     public init() {
         this.app.get("/login", this.loginGET);
